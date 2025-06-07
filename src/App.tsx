@@ -6,14 +6,14 @@ import { keyboardControls } from "./Helpers/keyboard";
 import TextConsole from "./Components/TextConsole";
 import { drawCanvas } from "./Helpers/canvas";
 
-const tileSize = 32;
-const canvasWidth = 640;
-const canvasHeight = 480;
+const tileSize = 10;
+const canvasWidth = 960;
+const canvasHeight = 540;
 
 export default function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [player, setPlayer] = useState<Player>({ x: 10, y: 7, items: [] });
+  const [player, setPlayer] = useState<Player>({ x: canvasWidth / 2 / tileSize, y: canvasHeight / 2 / tileSize, items: [] });
   const [input, setInput] = useState("");
   const [log, setLog] = useState<string[]>([]);
   const tickCountRef = useRef(0);
@@ -32,6 +32,13 @@ export default function App() {
   const tick = () => {
     tickCountRef.current += 1;
   };
+
+  useEffect(() => {
+    if (initialRoom.initialPlayerPosition) {
+      setPlayer({ x: initialRoom.initialPlayerPosition.x, y: initialRoom.initialPlayerPosition.y, items: [] });
+    }
+  }, []);
+
 
   // Game clock
   useEffect(() => {
@@ -70,7 +77,7 @@ export default function App() {
 
   return (
     <article className="mx-auto flex justify-center items-center h-screen">
-      <div className="flex flex-col items-center bg-black p-4 w-2/3">
+      <div className="flex flex-col items-center bg-black p-4 w-screen">
         <canvas
           ref={canvasRef}
           width={canvasWidth}

@@ -8,6 +8,7 @@ export type Room = {
     exits: string[];
     items: item[];
     description?: string;
+    initialPlayerPosition?: { x: number; y: number };    
 }
 
 export type item = {

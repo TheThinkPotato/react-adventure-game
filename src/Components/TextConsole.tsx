@@ -8,7 +8,7 @@ interface TextConsoleProps {
 
 const TextConsole = ({log, input, setInput, handleCommand, inputRef}: TextConsoleProps) => {
     return (
-        <section className="w-full max-w-2xl p-0 bg-gray-800 text-white">
+        <section className="w-full max-w-5xl p-0 bg-gray-800 text-white">
           <div
             className="p-2 h-34 overflow-y-auto"
             onFocus={() => {
