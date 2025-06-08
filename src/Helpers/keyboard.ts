@@ -62,7 +62,8 @@ export const keyboardControls = ({
   setMirrorPlayer,
   room,
 }: KeyboardControlsProps) => {
-  console.log("player x,y: ", player.x, player.y);
+
+  console.log("KeyboardPress player: ", player);
 
   const handleKeyDown = (e: KeyboardEvent) => {
     setPlayer((prev: Player) => {

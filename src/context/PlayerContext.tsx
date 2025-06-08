@@ -7,7 +7,7 @@ import React, {
 import type { Player } from "../Types/types";
 
 // Define the context shape
-type PlayerContextType = {
+export type PlayerContextType = {
   player: Player;
   setPlayer: React.Dispatch<React.SetStateAction<Player>>;
   mirrorPlayer: boolean;
@@ -15,14 +15,14 @@ type PlayerContextType = {
 };
 
 // Create context with a default (will be overridden by Provider)
-const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
+export const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 
 // Context provider component
 export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [mirrorPlayer, setMirrorPlayer] = useState(false);
   const [player, setPlayer] = useState<Player>({
-    x: 0,
-    y: 0,
+    x: -999,
+    y: -999,
     items: [],
   });
 
@@ -36,7 +36,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
 };
 
 // Custom hook to use player context
-export const usePlayer = () => {
+export const usePlayerContext = () => {
   const context = useContext(PlayerContext);
   if (!context) {
     throw new Error("usePlayer must be used within a PlayerProvider");

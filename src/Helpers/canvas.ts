@@ -1,4 +1,5 @@
 import { playerAsset } from "../assets/playerAsset";
+
 import type { Item, Player, Region, Room } from "../Types/types";
 
 interface Canvas {
@@ -48,7 +49,7 @@ export const drawCanvas = ({
   // Room
   ctx.fillStyle = "#222";
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-  
+
   // Only draw the background image if it's loaded
   if (backgroundImage.complete) {
     ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
@@ -59,7 +60,6 @@ export const drawCanvas = ({
     ctx.fillStyle = obj.color || "yellow";
     ctx.fillRect(obj.x! * tileSize, obj.y! * tileSize, tileSize, tileSize);
   });
-
 
   // Draw the block regions on the background image
   currentRoom.blockRegions.forEach((region: Region) => {
