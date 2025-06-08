@@ -13,9 +13,17 @@ interface Canvas {
 
 const { playerImg } = playerAsset();
 
-const getBackgroundImage = (backgroundImage: string) => {
+// Cache for background images
+const backgroundImageCache: { [key: string]: HTMLImageElement } = {};
+
+const getBackgroundImage = (backgroundImage: string): HTMLImageElement => {
+  if (backgroundImageCache[backgroundImage]) {
+    return backgroundImageCache[backgroundImage];
+  }
+
   const img = new Image();
   img.src = backgroundImage;
+  backgroundImageCache[backgroundImage] = img;
   return img;
 };
 
@@ -40,7 +48,11 @@ export const drawCanvas = ({
   // Room
   ctx.fillStyle = "#222";
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-  ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
+  
+  // Only draw the background image if it's loaded
+  if (backgroundImage.complete) {
+    ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
+  }
 
   // Objects
   currentRoom.items.forEach((obj: Item) => {
