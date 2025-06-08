@@ -1,19 +1,33 @@
 export type Player = {
     x: number;
     y: number;
-    items: item[];
+    items: Item[];
+    playerRegion?: Region;
 }
 
 export type Room = {
+    backgroundImage: string;
     exits: string[];
-    items: item[];
+    items: Item[];
     description?: string;
-    initialPlayerPosition?: { x: number; y: number };    
+    initialPlayerPosition?: { x: number; y: number };   
+    playerScale: number;
+    playerRegion: Region;
 }
 
-export type item = {
+export type Item = {
     name: string;
     color?: string;
     x?: number;
     y?: number;
+}
+
+export type Region = {
+    startCoord: Coord;
+    endCoord: Coord;
+}
+
+export type Coord = {
+    x: number;
+    y: number;
 }

@@ -1,4 +1,4 @@
-import type { item, Player, Room } from "../Types/types";
+import type { Item, Player, Room } from "../Types/types";
 
 export const command = (input:string, player:Player, initialRoom:Room) => {
 
@@ -6,7 +6,7 @@ export const command = (input:string, player:Player, initialRoom:Room) => {
     let response = "I don't understand that.";
 
     if (lower.includes("pick") || lower.includes("take") && lower.includes("red keycard")) {
-      const obj: item | undefined = initialRoom.items.find((o) => o.name === "red keycard");
+      const obj: Item | undefined = initialRoom.items.find((o) => o.name === "red keycard");
       if (obj && obj.x === player.x && obj.y === player.y) {
         response = "You picked up the red keycard!";
         initialRoom.items = initialRoom.items.filter((o) => o.name !== "red keycard");

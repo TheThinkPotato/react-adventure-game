@@ -1,44 +1,59 @@
 import { useEffect, useRef, useState } from "react";
 import type { Player } from "./Types/types";
 import { command } from "./command/Command";
-import { initialRoom } from "./Rooms/rooms";
 import { keyboardControls } from "./Helpers/keyboard";
 import TextConsole from "./Components/TextConsole";
 import { drawCanvas } from "./Helpers/canvas";
+import { usePlayer } from "./context/PlayerContext";
+import { initialRoom } from "./Rooms/rooms";
 
 const tileSize = 10;
 const canvasWidth = 960;
 const canvasHeight = 540;
 
 export default function App() {
+  const playerDetails = usePlayer();
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [player, setPlayer] = useState<Player>({ x: canvasWidth / 2 / tileSize, y: canvasHeight / 2 / tileSize, items: [] });
+  const [player, setPlayer] = useState<Player>({
+    x: canvasWidth / 2 / tileSize,
+    y: canvasHeight / 2 / tileSize,
+    items: [],
+    playerRegion: playerDetails.player.playerRegion,
+  });
   const [input, setInput] = useState("");
   const [log, setLog] = useState<string[]>([]);
   const tickCountRef = useRef(0);
+  const currentRoomRef = useRef(initialRoom);
 
   const draw = (ctx: CanvasRenderingContext2D) => {
     drawCanvas({
       ctx,
       player,
-      initialRoom,
+      currentRoom: currentRoomRef.current,
       canvasWidth,
       canvasHeight,
-      tileSize
+      tileSize,
+      mirrorPlayer: playerDetails.mirrorPlayer,
     });
-  }
+  };
+
+  // set player position to initial player position
+  useEffect(() => {
+    if (currentRoomRef.current.initialPlayerPosition) {
+      setPlayer({
+        x: currentRoomRef.current.initialPlayerPosition.x,
+        y: currentRoomRef.current.initialPlayerPosition.y,
+        items: [],
+        playerRegion: currentRoomRef.current.playerRegion,
+      });
+    }
+  }, []);
 
   const tick = () => {
     tickCountRef.current += 1;
   };
-
-  useEffect(() => {
-    if (initialRoom.initialPlayerPosition) {
-      setPlayer({ x: initialRoom.initialPlayerPosition.x, y: initialRoom.initialPlayerPosition.y, items: [] });
-    }
-  }, []);
-
 
   // Game clock
   useEffect(() => {
@@ -46,14 +61,12 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-
   // update canvas every time player moves
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const context = canvas.getContext("2d");
     if (context) draw(context);
-    console.log("player: ", player);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player]);
 
@@ -65,11 +78,17 @@ export default function App() {
       canvasHeight,
       canvasWidth,
       tileSize,
+      playerRegion: currentRoomRef.current.playerRegion,
+      setMirrorPlayer: playerDetails.setMirrorPlayer
     });
   }, []);
 
   const handleCommand = () => {
-    const response = command(input.toLowerCase(), player, initialRoom);
+    const response = command(
+      input.toLowerCase(),
+      player,
+      currentRoomRef.current
+    );
 
     setLog((prev) => [...prev, "> " + input, response]);
     setInput("");

@@ -1,46 +1,122 @@
 import { playerAsset } from "../assets/playerAsset";
-import type { item, Player, Room } from "../Types/types";
+import type { Item, Player, Room } from "../Types/types";
 
 interface Canvas {
   ctx: CanvasRenderingContext2D;
   player: Player;
-  initialRoom: Room;
+  currentRoom: Room;
   canvasWidth: number;
   canvasHeight: number;
   tileSize: number;
+  mirrorPlayer: boolean;
 }
 
-const { playerImg, playerScale } = playerAsset();
+const { playerImg } = playerAsset();
+
+
+const getBackgroundImage = (backgroundImage: string) => {
+  const img = new Image();
+  img.src = backgroundImage;
+  return img;
+};
 
 export const drawCanvas = ({
   ctx,
   player,
-  initialRoom,
+  currentRoom,
   canvasWidth,
   canvasHeight,
   tileSize,
+  mirrorPlayer,
 }: Canvas) => {
+  const playerScale = currentRoom.playerScale;
+  const backgroundImage = getBackgroundImage(currentRoom.backgroundImage);
+
+  
+
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   // Room
+  
+  
   ctx.fillStyle = "#222";
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+  
+  ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
+
 
   // Objects
-  initialRoom.items.forEach((obj: item) => {
+  currentRoom.items.forEach((obj: Item) => {
     ctx.fillStyle = obj.color || "yellow";
     ctx.fillRect(obj.x! * tileSize, obj.y! * tileSize, tileSize, tileSize);
   });
 
-  console.log(player.x, player.y, tileSize, playerScale);
+  console.log(
+    "player: ",
+    player.x,
+    player.y,
+    "tileSize: ",
+    tileSize,
+    "playerRegion: ",
+    player.playerRegion
+  );
+
+  const playerPosX =
+    player.x * tileSize + ((tileSize / 2) * playerScale + tileSize / 2);
+  const playerPosY = player.y * tileSize + tileSize / 2;
+
+
+
+  
+  // Draw the player on the background image
+
+  if (player.playerRegion) {
+    console.log(
+      "player.playerRegion: ",
+      player.playerRegion.startCoord.x,
+      player.playerRegion.endCoord.x
+    );
+    ctx.fillStyle = "rgba(0, 0, 255, 0.2)";
+    const width =
+      (player.playerRegion.endCoord.x - player.playerRegion.startCoord.x + 1) *
+      tileSize;
+    const height =
+      (player.playerRegion.endCoord.y - player.playerRegion.startCoord.y + 1) *
+      tileSize;
+    ctx.fillRect(
+      player.playerRegion.startCoord.x * tileSize +
+        player.x * tileSize -
+        (player.playerRegion.endCoord.x / 2) * tileSize,
+      player.playerRegion.startCoord.y * tileSize +
+        player.y * tileSize -
+        (player.playerRegion.endCoord.y / 2) * tileSize,
+      width,
+      height
+    );
+  }
 
   // Player
   ctx.fillStyle = "#0f0";
   ctx.fillRect(player.x * tileSize, player.y * tileSize, tileSize, tileSize);
-  ctx.drawImage(
-    playerImg,
-    player.x * tileSize + (tileSize / 2 * playerScale + (tileSize / 2)),
-    player.y * tileSize + (tileSize / 2),
-    tileSize * -playerScale,
-    tileSize * -playerScale
-  );
+
+  // if mirrorPlayer is true, flip the image
+  if (mirrorPlayer) {
+    ctx.save();
+    ctx.scale(-1, 1);
+    ctx.drawImage(
+      playerImg,
+      -playerPosX - tileSize, // Adjust x position when mirrored
+      playerPosY,
+      tileSize * playerScale,
+      tileSize * -playerScale
+    );
+    ctx.restore();
+  } else {
+    ctx.drawImage(
+      playerImg,
+      playerPosX,
+      playerPosY,
+      tileSize * -playerScale,
+      tileSize * -playerScale
+    );
+  }
 };
