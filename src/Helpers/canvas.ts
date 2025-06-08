@@ -1,5 +1,5 @@
 import { playerAsset } from "../assets/playerAsset";
-import type { Item, Player, Room } from "../Types/types";
+import type { Item, Player, Region, Room } from "../Types/types";
 
 interface Canvas {
   ctx: CanvasRenderingContext2D;
@@ -12,7 +12,6 @@ interface Canvas {
 }
 
 const { playerImg } = playerAsset();
-
 
 const getBackgroundImage = (backgroundImage: string) => {
   const img = new Image();
@@ -32,17 +31,16 @@ export const drawCanvas = ({
   const playerScale = currentRoom.playerScale;
   const backgroundImage = getBackgroundImage(currentRoom.backgroundImage);
 
-  
+  const playerPosX =
+    player.x * tileSize + ((tileSize / 2) * playerScale + tileSize / 2);
+  const playerPosY = player.y * tileSize + tileSize / 2;
 
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
   // Room
-  
-  
   ctx.fillStyle = "#222";
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-  
   ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
-
 
   // Objects
   currentRoom.items.forEach((obj: Item) => {
@@ -50,31 +48,19 @@ export const drawCanvas = ({
     ctx.fillRect(obj.x! * tileSize, obj.y! * tileSize, tileSize, tileSize);
   });
 
-  console.log(
-    "player: ",
-    player.x,
-    player.y,
-    "tileSize: ",
-    tileSize,
-    "playerRegion: ",
-    player.playerRegion
-  );
 
-  const playerPosX =
-    player.x * tileSize + ((tileSize / 2) * playerScale + tileSize / 2);
-  const playerPosY = player.y * tileSize + tileSize / 2;
+  // Draw the block regions on the background image
+  currentRoom.blockRegions.forEach((region: Region) => {
+    ctx.fillStyle = "rgba(255, 0, 0, 0.2)";
+    for (let x = region.startCoord.x; x <= region.endCoord.x; x++) {
+      for (let y = region.startCoord.y; y <= region.endCoord.y; y++) {
+        ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+      }
+    }
+  });
 
-
-
-  
-  // Draw the player on the background image
-
+  // Draw the player region on the background image
   if (player.playerRegion) {
-    console.log(
-      "player.playerRegion: ",
-      player.playerRegion.startCoord.x,
-      player.playerRegion.endCoord.x
-    );
     ctx.fillStyle = "rgba(0, 0, 255, 0.2)";
     const width =
       (player.playerRegion.endCoord.x - player.playerRegion.startCoord.x + 1) *

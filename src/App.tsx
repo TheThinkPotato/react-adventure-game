@@ -74,14 +74,16 @@ export default function App() {
   useEffect(() => {
     return keyboardControls({
       setPlayer,
+      player,
       e: new KeyboardEvent("keydown"),
       canvasHeight,
       canvasWidth,
       tileSize,
       playerRegion: currentRoomRef.current.playerRegion,
-      setMirrorPlayer: playerDetails.setMirrorPlayer
+      setMirrorPlayer: playerDetails.setMirrorPlayer,
+      room: currentRoomRef.current
     });
-  }, []);
+  }, [player]);
 
   const handleCommand = () => {
     const response = command(

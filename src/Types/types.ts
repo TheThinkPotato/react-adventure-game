@@ -13,6 +13,7 @@ export type Room = {
     initialPlayerPosition?: { x: number; y: number };   
     playerScale: number;
     playerRegion: Region;
+    blockRegions: Region[];
 }
 
 export type Item = {
