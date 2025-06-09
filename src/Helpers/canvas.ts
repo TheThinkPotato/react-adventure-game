@@ -69,24 +69,33 @@ export const drawCanvas = ({
         ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
       }
     }
+
+    // draw grid
+    // ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
+    // for (let x = 0; x < canvasWidth; x += tileSize) {
+    //   ctx.fillRect(x, 0, 1, canvasHeight);
+    // }
+    // for (let y = 0; y < canvasHeight; y += tileSize) {
+    //   ctx.fillRect(0, y, canvasWidth, 1);
+    // }
   });
 
   // Draw the player region on the background image
-  if (player.playerRegion) {
+  if (currentRoom.playerRegionSize) {
     ctx.fillStyle = "rgba(0, 0, 255, 0.2)";
     const width =
-      (player.playerRegion.endCoord.x - player.playerRegion.startCoord.x + 1) *
+      (currentRoom.playerRegionSize.endCoord.x - currentRoom.playerRegionSize.startCoord.x + 1) *
       tileSize;
     const height =
-      (player.playerRegion.endCoord.y - player.playerRegion.startCoord.y + 1) *
+      (currentRoom.playerRegionSize.endCoord.y - currentRoom.playerRegionSize.startCoord.y + 1) *
       tileSize;
     ctx.fillRect(
-      player.playerRegion.startCoord.x * tileSize +
+      currentRoom.playerRegionSize.startCoord.x * tileSize +
         player.x * tileSize -
-        (player.playerRegion.endCoord.x / 2) * tileSize,
-      player.playerRegion.startCoord.y * tileSize +
+        (currentRoom.playerRegionSize.endCoord.x / 2) * tileSize,
+      currentRoom.playerRegionSize.startCoord.y * tileSize +
         player.y * tileSize -
-        (player.playerRegion.endCoord.y / 2) * tileSize,
+        (currentRoom.playerRegionSize.endCoord.y / 2) * tileSize,
       width,
       height
     );

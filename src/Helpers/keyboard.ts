@@ -1,4 +1,5 @@
-import type { Player, Region, Room } from "../Types/types";
+import type { Player, Room } from "../Types/types";
+import { updatePlayerRegion } from "./playerRegion";
 
 interface KeyboardControlsProps {
   setPlayer: React.Dispatch<React.SetStateAction<Player>>;
@@ -7,7 +8,7 @@ interface KeyboardControlsProps {
   canvasHeight: number;
   canvasWidth: number;
   tileSize: number;
-  playerRegion?: Region | undefined;
+  // playerRegionSize?: Region | undefined;
   setMirrorPlayer: React.Dispatch<React.SetStateAction<boolean>>;
   room: Room;
 }
@@ -58,11 +59,10 @@ export const keyboardControls = ({
   canvasHeight,
   canvasWidth,
   tileSize,
-  playerRegion,
+  // playerRegionSize: playerRegion,
   setMirrorPlayer,
   room,
 }: KeyboardControlsProps) => {
-
   console.log("KeyboardPress player: ", player);
 
   const handleKeyDown = (e: KeyboardEvent) => {
@@ -90,7 +90,12 @@ export const keyboardControls = ({
         x = Math.min(canvasWidth / tileSize - 1, x + 1);
         setMirrorPlayer(false);
       }
-      return { x, y, items, playerRegion };
+
+      // update playerRegion
+      const playerRegion = updatePlayerRegion(player, room);
+      setPlayer({ ...player, playerRegion: playerRegion, x, y, items });
+
+      return { x, y, items, playerRegionSize: playerRegion };
     });
   };
 

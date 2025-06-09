@@ -12,7 +12,7 @@ export type Room = {
     description?: string;
     initialPlayerPosition?: { x: number; y: number };   
     playerScale: number;
-    playerRegion: Region;
+    playerRegionSize: Region;
     blockRegions: Region[];
 }
 

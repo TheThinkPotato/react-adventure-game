@@ -5,8 +5,10 @@ import TextConsole from "./Components/TextConsole";
 import { drawCanvas } from "./Helpers/canvas";
 import { initialRoom } from "./Rooms/rooms";
 import { usePlayerContext } from "./context/PlayerContext";
+import { handleMouseLeftClick } from "./Helpers/mouse";
+// import { updatePlayerRegion } from "./Helpers/playerRegion";
 
-const tileSize = 10;
+export const tileSize = 10;
 const canvasWidth = 960;
 const canvasHeight = 540;
 
@@ -43,7 +45,7 @@ export default function App() {
         x: currentRoomRef.current.initialPlayerPosition.x,
         y: currentRoomRef.current.initialPlayerPosition.y,
         items: [],
-        playerRegion: currentRoomRef.current.playerRegion,
+        // playerRegionSize: updatePlayerRegion(player, tileSize),
       });
     }
   }, [setPlayer, currentRoomRef.current.initialPlayerPosition]);
@@ -69,18 +71,29 @@ export default function App() {
 
   // Keyboard Controls
   useEffect(() => {
-    return keyboardControls({
+    const keyboardControlsResult = keyboardControls({
       setPlayer,
       player,
       e: new KeyboardEvent("keydown"),
       canvasHeight,
       canvasWidth,
       tileSize,
-      playerRegion: currentRoomRef.current.playerRegion,
+      // playerRegionSize: player.playerRegionSize,
       setMirrorPlayer,
       room: currentRoomRef.current,
     });
-  }, [player, setMirrorPlayer, setPlayer, currentRoomRef.current.playerRegion]);
+    // setPlayer({
+    //   ...player,
+    //   playerRegion: updatePlayerRegion(player, tileSize, currentRoomRef.current),
+    // });
+
+    return keyboardControlsResult;
+  }, [
+    player,
+    setMirrorPlayer,
+    setPlayer,
+    currentRoomRef.current.playerRegionSize,
+  ]);
 
   const handleCommand = () => {
     const response = command(
@@ -101,10 +114,8 @@ export default function App() {
           width={canvasWidth}
           height={canvasHeight}
           className="border border-white mb-4"
+          onMouseDown={handleMouseLeftClick}
           onFocus={() => {
-            inputRef.current?.focus();
-          }}
-          onMouseDown={() => {
             inputRef.current?.focus();
           }}
         />
