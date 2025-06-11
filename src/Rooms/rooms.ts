@@ -16,7 +16,7 @@ export const initialRoom: Room = {
   roomObjects: [
     {
       objectName: "computerRack2",
-      image: "/assets/objects/computerRack1.png",
+      image: "/assets/objects/computerRack.png",
       objectSize: { width: 16, height: 32 },
       x: 5,
       y: 40,   
@@ -26,7 +26,7 @@ export const initialRoom: Room = {
     },
     {
       objectName: "computerRack1",
-      image: "/assets/objects/computerRack1.png",
+      image: "/assets/objects/computerRack.png",
       objectSize: { width: 16, height: 32 },
       x: 20,
       y: 40,   

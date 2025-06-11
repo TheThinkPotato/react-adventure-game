@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { command } from "./command/Command";
 import { keyboardControls } from "./Helpers/keyboard";
 import TextConsole from "./Components/TextConsole";
-import { drawCanvas } from "./Helpers/canvas";
+import { drawCanvas } from "./Helpers/CanvasHelpers/canvas";
 import { initialRoom } from "./Rooms/rooms";
 import { usePlayerContext } from "./context/PlayerContext";
 import { handleMouseLeftClick } from "./Helpers/mouse";
