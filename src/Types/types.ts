@@ -1,4 +1,5 @@
 export type Player = {
+    objectName: "player";
     x: number;
     y: number;
     items: Item[];

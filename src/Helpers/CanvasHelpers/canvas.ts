@@ -8,8 +8,9 @@ import {
   renderRoomBlockRegions,
   renderRoomObjectBlockRegions,
 } from "./debugCanvas";
-import { renderPlayer } from "./playerCanvas";
-import { renderRoomObjects } from "./roomObjectsCanvas";
+import {
+  renderObjects,
+} from "./roomPlayerObjectsCanvas";
 
 interface Canvas {
   ctx: CanvasRenderingContext2D;
@@ -69,7 +70,7 @@ export const drawCanvas = ({
   if (backgroundImage.complete)
     ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
 
-  // Objects
+  // Objects  TODO: move this into render objects
   currentRoom.items.forEach((obj: Item) => {
     ctx.fillStyle = obj.color || "yellow";
     ctx.fillRect(obj.x! * tileSize, obj.y! * tileSize, tileSize, tileSize);
@@ -82,13 +83,9 @@ export const drawCanvas = ({
   if (debugRenderRoomObjectBlock)
     renderRoomObjectBlockRegions(currentRoom, ctx, tileSize);
 
-  // Room Objects
-  renderRoomObjects(currentRoom, ctx, tileSize);
-
-  // Player
-  if (debugRenderPlayerPoint) playerPoint(ctx, player, tileSize);
-
-  renderPlayer(
+  // PLayer and Objects Layer
+  renderObjects(
+    currentRoom,
     ctx,
     tileSize,
     mirrorPlayer,
@@ -97,4 +94,7 @@ export const drawCanvas = ({
     playerPosY,
     playerScale
   );
+
+  // Player
+  if (debugRenderPlayerPoint) playerPoint(ctx, player, tileSize);
 };
