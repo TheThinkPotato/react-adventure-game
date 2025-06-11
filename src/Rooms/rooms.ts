@@ -13,4 +13,26 @@ export const initialRoom: Room = {
     { startCoord: { x: 0, y: 0 }, endCoord: { x: 96, y: 25 } },
     { startCoord: { x: 90, y: 26 }, endCoord: { x: 96, y: 27 } },
   ],
+  roomObjects: [
+    {
+      objectName: "computerRack2",
+      image: "/assets/objects/computerRack1.png",
+      objectSize: { width: 16, height: 32 },
+      x: 5,
+      y: 40,   
+      blockRegions: [
+        { startCoord: { x: 5, y: 35 }, endCoord: { x: 20, y: 40 } },
+      ],
+    },
+    {
+      objectName: "computerRack1",
+      image: "/assets/objects/computerRack1.png",
+      objectSize: { width: 16, height: 32 },
+      x: 20,
+      y: 40,   
+      blockRegions: [
+        { startCoord: { x: 20, y: 35 }, endCoord: { x: 35, y: 40 } },
+      ],
+    },
+  ],
 };

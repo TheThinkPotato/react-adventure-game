@@ -14,6 +14,7 @@ export type Room = {
     playerScale: number;
     playerRegionSize: Region;
     blockRegions: Region[];
+    roomObjects?: RoomObject[];
 }
 
 export type Item = {
@@ -31,4 +32,24 @@ export type Region = {
 export type Coord = {
     x: number;
     y: number;
+}
+
+export type ObjectSize = {
+    width: number;
+    height: number;
+}
+
+export type RoomObject = {
+    objectName: string;
+    objectSize: ObjectSize;
+    image: string;
+    x: number;
+    y: number;
+    color?: string;
+    description?: string;
+    isLocked?: boolean;
+    isOpen?: boolean;
+    isVisible?: boolean;
+    blockRegions?: Region[];
+
 }

@@ -14,7 +14,7 @@ export const command = (input: string, player: Player, initialRoom: Room) => {
     if (!player.playerRegion) {
       return "";
     }
-    const isInRange =
+    const isInPlayerRange =
       obj?.x !== undefined &&
       obj?.y !== undefined &&
       obj.x >= player.playerRegion.startCoord.x &&
@@ -22,7 +22,7 @@ export const command = (input: string, player: Player, initialRoom: Room) => {
       obj.y >= player.playerRegion.startCoord.y &&
       obj.y <= player.playerRegion.endCoord.y;
 
-    if (isInRange) {
+    if (isInPlayerRange) {
       response = "You picked up the red keycard!";
       initialRoom.items = initialRoom.items.filter(
         (o) => o.name !== "red keycard"

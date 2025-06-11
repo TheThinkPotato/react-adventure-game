@@ -1,6 +1,6 @@
 import { playerAsset } from "../assets/playerAsset";
 
-import type { Item, Player, Region, Room } from "../Types/types";
+import type { Item, Player, Region, Room, RoomObject } from "../Types/types";
 
 interface Canvas {
   ctx: CanvasRenderingContext2D;
@@ -62,32 +62,36 @@ export const drawCanvas = ({
   });
 
   // Draw the block regions on the background image
-  currentRoom.blockRegions.forEach((region: Region) => {
-    ctx.fillStyle = "rgba(255, 0, 0, 0.2)";
-    for (let x = region.startCoord.x; x <= region.endCoord.x; x++) {
-      for (let y = region.startCoord.y; y <= region.endCoord.y; y++) {
-        ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
-      }
-    }
+  // currentRoom.blockRegions.forEach((region: Region) => {
+  //   ctx.fillStyle = "rgba(255, 0, 0, 0.2)";
+  //   for (let x = region.startCoord.x; x <= region.endCoord.x; x++) {
+  //     for (let y = region.startCoord.y; y <= region.endCoord.y; y++) {
+  //       ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+  //     }
+  //   }
 
-    // draw grid
-    // ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
-    // for (let x = 0; x < canvasWidth; x += tileSize) {
-    //   ctx.fillRect(x, 0, 1, canvasHeight);
-    // }
-    // for (let y = 0; y < canvasHeight; y += tileSize) {
-    //   ctx.fillRect(0, y, canvasWidth, 1);
-    // }
-  });
+  //   // draw grid
+  //   // ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
+  //   // for (let x = 0; x < canvasWidth; x += tileSize) {
+  //   //   ctx.fillRect(x, 0, 1, canvasHeight);
+  //   // }
+  //   // for (let y = 0; y < canvasHeight; y += tileSize) {
+  //   //   ctx.fillRect(0, y, canvasWidth, 1);
+  //   // }
+  // });
 
   // Draw the player region on the background image
   if (currentRoom.playerRegionSize) {
     ctx.fillStyle = "rgba(0, 0, 255, 0.2)";
     const width =
-      (currentRoom.playerRegionSize.endCoord.x - currentRoom.playerRegionSize.startCoord.x + 1) *
+      (currentRoom.playerRegionSize.endCoord.x -
+        currentRoom.playerRegionSize.startCoord.x +
+        1) *
       tileSize;
     const height =
-      (currentRoom.playerRegionSize.endCoord.y - currentRoom.playerRegionSize.startCoord.y + 1) *
+      (currentRoom.playerRegionSize.endCoord.y -
+        currentRoom.playerRegionSize.startCoord.y +
+        1) *
       tileSize;
     ctx.fillRect(
       currentRoom.playerRegionSize.startCoord.x * tileSize +
@@ -100,6 +104,31 @@ export const drawCanvas = ({
       height
     );
   }
+
+  // Draw the object block regions on the background image
+  // currentRoom.roomObjects?.forEach((obj: RoomObject) => {
+  //   obj.blockRegions?.forEach((region: Region) => {
+  //     ctx.fillStyle = "rgba(255, 0, 0, 0.2)";
+  //     for (let x = region.startCoord.x; x <= region.endCoord.x; x++) {
+  //       for (let y = region.startCoord.y; y <= region.endCoord.y; y++) {
+  //         ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+  //       }
+  //     }
+  //   });
+  // });
+
+  // Room Objects
+  currentRoom.roomObjects?.forEach((obj: RoomObject) => {
+    const img = new Image();
+    img.src = obj.image;
+    ctx.drawImage(
+      img,
+      obj.x * tileSize,
+      obj.y * tileSize - obj.objectSize.height * tileSize + tileSize,
+      obj.objectSize.width * tileSize,
+      obj.objectSize.height * tileSize
+    );
+  });
 
   // Player
   ctx.fillStyle = "#0f0";

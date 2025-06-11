@@ -19,35 +19,75 @@ const checkNextMoveBlockRegions = (
   direction: string
 ) => {
   if (direction === "up") {
-    return room.blockRegions.some(
-      (region) =>
-        region.endCoord.y === player.y - 1 &&
-        player.x >= region.startCoord.x &&
-        player.x <= region.endCoord.x
+    return (
+      room.blockRegions.some(
+        (region) =>
+          region.endCoord.y === player.y - 1 &&
+          player.x >= region.startCoord.x &&
+          player.x <= region.endCoord.x
+      ) ||
+      room.roomObjects?.some((obj) =>
+        obj.blockRegions?.some(
+          (region) =>
+            region.endCoord.y === player.y - 1 &&
+            player.x >= region.startCoord.x &&
+            player.x <= region.endCoord.x
+        )
+      )
     );
   }
   if (direction === "down") {
-    return room.blockRegions.some(
-      (region) =>
-        region.startCoord.y === player.y + 1 &&
-        player.x >= region.startCoord.x &&
-        player.x <= region.endCoord.x
+    return (
+      room.blockRegions.some(
+        (region) =>
+          region.startCoord.y === player.y + 1 &&
+          player.x >= region.startCoord.x &&
+          player.x <= region.endCoord.x
+      ) ||
+      room.roomObjects?.some((obj) =>
+        obj.blockRegions?.some(
+          (region) =>
+            region.startCoord.y === player.y + 1 &&
+            player.x >= region.startCoord.x &&
+            player.x <= region.endCoord.x
+        )
+      )
     );
   }
   if (direction === "left") {
-    return room.blockRegions.some(
-      (region) =>
-        region.endCoord.x === player.x - 1 &&
-        player.y >= region.startCoord.y &&
-        player.y <= region.endCoord.y
+    return (
+      room.blockRegions.some(
+        (region) =>
+          region.endCoord.x === player.x - 1 &&
+          player.y >= region.startCoord.y &&
+          player.y <= region.endCoord.y
+      ) ||
+      room.roomObjects?.some((obj) =>
+        obj.blockRegions?.some(
+          (region) =>
+            region.endCoord.x === player.x - 1 &&
+            player.y >= region.startCoord.y &&
+            player.y <= region.endCoord.y
+        )
+      )
     );
   }
   if (direction === "right") {
-    return room.blockRegions.some(
-      (region) =>
-        region.startCoord.x === player.x + 1 &&
-        player.y >= region.startCoord.y &&
-        player.y <= region.endCoord.y
+    return (
+      room.blockRegions.some(
+        (region) =>
+          region.startCoord.x === player.x + 1 &&
+          player.y >= region.startCoord.y &&
+          player.y <= region.endCoord.y
+      ) ||
+      room.roomObjects?.some((obj) =>
+        obj.blockRegions?.some(
+          (region) =>
+            region.startCoord.x === player.x + 1 &&
+            player.y >= region.startCoord.y &&
+            player.y <= region.endCoord.y
+        )
+      )
     );
   }
   return false;
