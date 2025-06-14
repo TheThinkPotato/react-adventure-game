@@ -1,4 +1,4 @@
-import type { Room, RoomObject } from "../../Types/types";
+import type { Item, Room, RoomObject } from "../../Types/types";
 
 export const renderRoomObjects = (
   room: Room,
@@ -19,7 +19,7 @@ export const renderRoomObjects = (
 };
 
 export const renderPlayer = (
-  ctx: CanvasRenderingContext2D,  
+  ctx: CanvasRenderingContext2D,
   tileSize: number,
   mirrorPlayer: boolean,
   playerImg: HTMLImageElement,
@@ -27,7 +27,7 @@ export const renderPlayer = (
   playerPosY: number,
   playerScale: number
 ) => {
-if (mirrorPlayer) {
+  if (mirrorPlayer) {
     ctx.save();
     ctx.scale(-1, 1);
     ctx.drawImage(
@@ -49,18 +49,19 @@ if (mirrorPlayer) {
   }
 };
 
-
 export const renderObjects = (
   room: Room,
   ctx: CanvasRenderingContext2D,
-  tileSize: number,  //============ player props below ============
+  tileSize: number,
+  //============ player props below ============
   mirrorPlayer: boolean,
   playerImg: HTMLImageElement,
   playerPosX: number,
   playerPosY: number,
-  playerScale: number
+  playerScale: number,
+  //============ player props above ============
+  imageCache: { [key: string]: HTMLImageElement }
 ) => {
-
   const player = {
     objectName: "player",
     y: playerPosY / Math.floor(tileSize), // hack need to fix what ever makes this so big
@@ -68,31 +69,84 @@ export const renderObjects = (
     imageX: playerPosX,
     scale: playerScale,
     img: playerImg,
-  }
+    imageCache: imageCache
+  };
 
-  const drawList = room.roomObjects ? [...room.roomObjects, player] : [player];
+  const drawList = room.roomObjects
+    ? [
+        ...room.roomObjects,
+        player,
+        ...room.items.filter((item) => item.drawAboveObjects),
+      ]
+    : [player, ...room.items.filter((item) => item.drawAboveObjects)];
 
   drawList.sort((a, b) => a.y - b.y);
 
-  console.log("Sort: ",drawList);
-  
-  drawList.forEach(item => {
+  console.log("Sort: ", drawList);
+
+  drawList.forEach((item) => {
     console.log("Element: ", item.objectName, item.y);
   });
-  
+
   drawList.forEach((obj) => {
-    if ('img' in obj) {
-      renderPlayer(ctx, tileSize, mirrorPlayer, obj.img, obj.imageX, obj.imageY, obj.scale);
+    if ("img" in obj) {
+      renderPlayer(
+        ctx,
+        tileSize,
+        mirrorPlayer,
+        obj.img,
+        obj.imageX,
+        obj.imageY,
+        obj.scale
+      );
     } else {
-      const img = new Image();
-      img.src = obj.image;
+      // const img = new Image();
+      // img.src = obj.image || "";
+      // imageCache[obj.image] = img;
+      const img = getImage(obj.image, imageCache);
+      if (!img) {
+        console.error("Image not found: ", obj.image);
+        return;
+      }
+      
       ctx.drawImage(
         img,
-        obj.x * tileSize,
-        obj.y * tileSize - obj.objectSize.height * tileSize + tileSize,
+        obj.x * tileSize + (obj.offset?.x || 0),
+        obj.y * tileSize - obj.objectSize.height * tileSize + tileSize + (obj.offset?.y || 0),
         obj.objectSize.width * tileSize,
-        obj.objectSize.height * tileSize      
+        obj.objectSize.height * tileSize
       );
     }
   });
+};
+
+const getImage = (image: string, imageCache: { [key: string]: HTMLImageElement }) => {
+  if (imageCache[image]) {
+    return imageCache[image];
+  }
+  const img = new Image();
+  img.src = image;
+  imageCache[image] = img;
+  return img;
+}
+
+export const renderItems = (
+  ctx: CanvasRenderingContext2D,
+  tileSize: number,
+  obj: Item,
+  imageCache: { [key: string]: HTMLImageElement }
+) => {
+  const img = getImage(obj.image, imageCache);
+  if (!img) {
+    console.error("Image not found: ", obj.image);
+    return;
+  }
+
+  ctx.drawImage(
+    img,
+    obj.x * tileSize + (obj.offset?.x || 0),
+    obj.y * tileSize - obj.objectSize.height * tileSize + tileSize + (obj.offset?.y || 0),
+    obj.objectSize.width * tileSize,
+    obj.objectSize.height * tileSize    
+  );
 };

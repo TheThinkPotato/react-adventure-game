@@ -19,10 +19,13 @@ export type Room = {
 }
 
 export type Item = {
-    name: string;
-    color?: string;
-    x?: number;
-    y?: number;
+    objectName: string;
+    x: number;
+    y: number;
+    offset?: Coord;
+    image: string;
+    objectSize: ObjectSize;
+    drawAboveObjects: boolean;
 }
 
 export type Region = {
@@ -46,6 +49,7 @@ export type RoomObject = {
     image: string;
     x: number;
     y: number;
+    offset?: Coord;
     color?: string;
     description?: string;
     isLocked?: boolean;

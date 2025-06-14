@@ -9,6 +9,7 @@ import {
   renderRoomObjectBlockRegions,
 } from "./debugCanvas";
 import {
+  renderItems,
   renderObjects,
 } from "./roomPlayerObjectsCanvas";
 
@@ -31,16 +32,16 @@ const debugRenderPlayerPoint = true;
 const { playerImg } = playerAsset();
 
 // Cache for background images
-const backgroundImageCache: { [key: string]: HTMLImageElement } = {};
+const imageCache: { [key: string]: HTMLImageElement } = {};
 
 const getBackgroundImage = (backgroundImage: string): HTMLImageElement => {
-  if (backgroundImageCache[backgroundImage]) {
-    return backgroundImageCache[backgroundImage];
+  if (imageCache[backgroundImage]) {
+    return imageCache[backgroundImage];
   }
 
   const img = new Image();
   img.src = backgroundImage;
-  backgroundImageCache[backgroundImage] = img;
+  imageCache[backgroundImage] = img;
   return img;
 };
 
@@ -70,10 +71,9 @@ export const drawCanvas = ({
   if (backgroundImage.complete)
     ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
 
-  // Objects  TODO: move this into render objects
-  currentRoom.items.forEach((obj: Item) => {
-    ctx.fillStyle = obj.color || "yellow";
-    ctx.fillRect(obj.x! * tileSize, obj.y! * tileSize, tileSize, tileSize);
+  // Items below objects Layer
+  currentRoom.items.filter((obj: Item) => !obj.drawAboveObjects).forEach((obj: Item) => {
+    renderItems(ctx, tileSize, obj, imageCache);
   });
 
   if (debugRenderRoomBlock) renderRoomBlockRegions(currentRoom, ctx, tileSize);
@@ -92,9 +92,10 @@ export const drawCanvas = ({
     playerImg,
     playerPosX,
     playerPosY,
-    playerScale
-  );
+    playerScale,
+    imageCache
+  );  
 
-  // Player
+  // Debug Player Point
   if (debugRenderPlayerPoint) playerPoint(ctx, player, tileSize);
 };

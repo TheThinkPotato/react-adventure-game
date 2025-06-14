@@ -9,7 +9,7 @@ export const command = (input: string, player: Player, initialRoom: Room) => {
     (lower.includes("take") && lower.includes("red keycard"))
   ) {
     const obj: Item | undefined = initialRoom.items.find(
-      (o) => o.name === "red keycard"
+      (o) => o.objectName === "red keycard"
     );
     if (!player.playerRegion) {
       return "";
@@ -25,7 +25,7 @@ export const command = (input: string, player: Player, initialRoom: Room) => {
     if (isInPlayerRange) {
       response = "You picked up the red keycard!";
       initialRoom.items = initialRoom.items.filter(
-        (o) => o.name !== "red keycard"
+        (o) => o.objectName !== "red keycard"
       );
       player.items = [...(player.items || []), obj];
       initialRoom.description = "You are in a room the room is empty.";
@@ -38,7 +38,7 @@ export const command = (input: string, player: Player, initialRoom: Room) => {
     console.log("player.items: ", player.items);
     if (player.items && player.items.length > 0) {
       response =
-        "You are carrying: " + player.items.map((i) => i.name).join(", ");
+        "You are carrying: " + player.items.map((i) => i.objectName).join(", ");
     } else {
       response = "You are not carrying anything.";
     }
