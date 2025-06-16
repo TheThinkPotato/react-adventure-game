@@ -16,6 +16,7 @@ export type Room = {
     playerRegionSize: Region;
     blockRegions: Region[];
     roomObjects?: RoomObject[];
+    roomExits?: RoomExitRegion[];
 }
 
 export type Item = {
@@ -56,5 +57,12 @@ export type RoomObject = {
     isOpen?: boolean;
     isVisible?: boolean;
     blockRegions?: Region[];
-
 }
+
+export type RoomExitRegion = {
+    startCoord: Coord;
+    endCoord: Coord;
+    targetRoomIndex: number;
+}
+
+

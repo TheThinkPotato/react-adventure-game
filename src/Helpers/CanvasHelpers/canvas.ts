@@ -6,6 +6,7 @@ import {
   renderGrid,
   renderPlayerRegion,
   renderRoomBlockRegions,
+  renderRoomExits,
   renderRoomObjectBlockRegions,
 } from "./debugCanvas";
 import {
@@ -28,6 +29,7 @@ const debugRenderRoomObjectBlock = false;
 const debugRenderGrid = false;
 const debugRenderPlayerRegion = true;
 const debugRenderPlayerPoint = true;
+const debugRenderRoomExits = true;
 
 const { playerImg } = playerAsset();
 
@@ -95,6 +97,9 @@ export const drawCanvas = ({
     playerScale,
     imageCache
   );  
+
+  // Room Exits
+  if (debugRenderRoomExits) renderRoomExits(currentRoom, ctx, tileSize);
 
   // Debug Player Point
   if (debugRenderPlayerPoint) playerPoint(ctx, player, tileSize);

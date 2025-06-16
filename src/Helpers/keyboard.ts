@@ -103,14 +103,14 @@ export const keyboardControls = ({
   setMirrorPlayer,
   room,
 }: KeyboardControlsProps) => {
-  console.log("KeyboardPress player: ", player);
-
+  // console.log("KeyboardPress player: ", player);
   const handleKeyDown = (e: KeyboardEvent) => {
     setPlayer((prev: Player) => {
       let { x, y } = prev;
       const items = prev.items || [];
-      if (e.key === "ArrowUp" && !checkNextMoveBlockRegions(player, room, "up"))
+      if (e.key === "ArrowUp" && !checkNextMoveBlockRegions(player, room, "up")) {
         y = Math.max(0, y - 1);
+      }
       if (
         e.key === "ArrowDown" &&
         !checkNextMoveBlockRegions(player, room, "down")

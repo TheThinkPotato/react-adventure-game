@@ -1,6 +1,6 @@
 // Draw the block regions on the background image
 
-import type { Player, Region, Room, RoomObject } from "../../Types/types";
+import type { Player, Region, Room, RoomExitRegion, RoomObject } from "../../Types/types";
 
 export const renderRoomBlockRegions = (
   room: Room,
@@ -76,6 +76,21 @@ export const renderPlayerRegion = (
     width,
     height
   );
+};
+
+export const renderRoomExits = (
+  room: Room,
+  ctx: CanvasRenderingContext2D,
+  tileSize: number
+) => {
+  room.roomExits?.forEach((region: RoomExitRegion) => {
+    ctx.fillStyle = "rgba(0, 200, 0, 0.2)";
+    for (let x = region.startCoord.x; x <= region.endCoord.x; x++) {
+      for (let y = region.startCoord.y; y <= region.endCoord.y; y++) {
+        ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+      }
+    }
+  });
 };
 
 export const playerPoint = (
