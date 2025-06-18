@@ -1,40 +1,49 @@
 import type { Item, Player, Room } from "../Types/types";
 
-export const command = (input: string, player: Player, initialRoom: Room) => {
-  const lower = input.toLowerCase();
+
+const listDisplayedItemsInRoom = (room: Room) => {
+  return room.items.filter((i) => i.displayedInDescription);
+};
+
+
+export const command = (input: string, player: Player, room: Room) => {
+  const lowerCasedInput = input.toLowerCase();
   let response = "I don't understand that.";
 
+  // Check if input contains "pick" or "take" and any item name from the room
+  const mentionedItem = room.items.find(item => 
+    lowerCasedInput.includes(item.objectName.toLowerCase())
+  );
+
   if (
-    lower.includes("pick") ||
-    (lower.includes("take") && lower.includes("red keycard"))
+    lowerCasedInput.includes("pick") ||
+    (lowerCasedInput.includes("take") && mentionedItem)
   ) {
-    const obj: Item | undefined = initialRoom.items.find(
-      (o) => o.objectName === "red keycard"
-    );
-    if (!player.playerRegion) {
+    const obj: Item | undefined = mentionedItem;
+    if (!player.playerRegion || !obj) {
       return "";
     }
     const isInPlayerRange =
-      obj?.x !== undefined &&
-      obj?.y !== undefined &&
+      obj.x !== undefined &&
+      obj.y !== undefined &&
       obj.x >= player.playerRegion.startCoord.x &&
       obj.x <= player.playerRegion.endCoord.x &&
       obj.y >= player.playerRegion.startCoord.y &&
       obj.y <= player.playerRegion.endCoord.y;
 
     if (isInPlayerRange) {
-      response = "You picked up the red keycard!";
-      initialRoom.items = initialRoom.items.filter(
-        (o) => o.objectName !== "red keycard"
+      response = `You picked up the ${obj.objectName}!`;
+      room.items = room.items.filter(
+        (o) => o.objectName !== obj.objectName
       );
       player.items = [...(player.items || []), obj];
-      initialRoom.description = "You are in a room the room is empty.";
+      obj.isPickedUp = true;
     } else {
-      response = "There's no keycard here.";
+      response = `There's no ${obj.objectName} here.`;
     }
   }
 
-  if (lower.includes("inventory") || lower.includes("inv")) {
+  if (lowerCasedInput.includes("inventory") || lowerCasedInput.includes("inv")) {
     console.log("player.items: ", player.items);
     if (player.items && player.items.length > 0) {
       response =
@@ -44,11 +53,16 @@ export const command = (input: string, player: Player, initialRoom: Room) => {
     }
   }
 
-  if (lower.includes("look")) {
-    response = initialRoom.description || "You see nothing special.";
+  if (lowerCasedInput.includes("look")) {
+    const displayedItems = listDisplayedItemsInRoom(room);
+    response = room.description || "You see nothing special.";
+    if (displayedItems.length > 0) {
+      response += "\n\nYou can see: " + displayedItems.map((i) => i.displayedItemDescription ?? i.objectName).join(", ");
+    }
+    return response;
   }
 
-  if (lower.includes("help")) {
+  if (lowerCasedInput.includes("help")) {
     response =
       "You can use the following commands: \n\n" +
       "LOOK: Look around the room\n" +

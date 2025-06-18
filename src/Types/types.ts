@@ -21,12 +21,16 @@ export type Room = {
 
 export type Item = {
     objectName: string;
+    itemId: string;
     x: number;
     y: number;
     offset?: Coord;
     image: string;
     objectSize: ObjectSize;
     drawAboveObjects: boolean;
+    displayedInDescription: boolean;
+    displayedItemDescription?: string;  
+    isPickedUp?: boolean;
 }
 
 export type Region = {
@@ -64,5 +68,3 @@ export type RoomExitRegion = {
     endCoord: Coord;
     targetRoomIndex: number;
 }
-
-
