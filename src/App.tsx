@@ -13,7 +13,7 @@ export const tileSize = 10;
 const canvasWidth = 960;
 const canvasHeight = 540;
 
-const rooms = [initialRoom, nextRoom];
+export const rooms = [initialRoom, nextRoom];
 let currentRoomIndex = 0;
 
 export default function App() {
@@ -50,6 +50,10 @@ export default function App() {
         y: currentRoom.initialPlayerPosition.y,
         items: [],
         objectName: "player",
+        playerRegion: {
+          startCoord: { x: 0, y: 0 },
+          endCoord: { x: 0, y: 0 },
+        },
         // playerRegionSize: updatePlayerRegion(player, tileSize),
       });
     }

@@ -1,62 +1,52 @@
-import type { Item, Player, Region, Room } from "../Types/types";
+import type { Item, Player, Room } from "../Types/types";
+import {
+  isPlayerInRangeOffRegion,
+  isPlayerInRangeOfObject,
+  syncAllRoomExits,
+} from "./commandHelpers";
 
 const listDisplayedItemsInRoom = (room: Room) => {
   return room.items.filter((i) => i.displayedInDescription);
-};
-
-const isPlayerInRangeOffRegion = (player: Player, region: Region) => {
-  // Check if player region overlaps with the target region
-
-  const playerOverlapsRegion =
-    player.playerRegion.startCoord.x <= region.endCoord.x -1 &&
-    player.playerRegion.endCoord.x + 1 >= region.startCoord.x &&
-    player.playerRegion.startCoord.y <= region.endCoord.y &&
-    player.playerRegion.endCoord.y >= region.startCoord.y;
-
-  return playerOverlapsRegion;
-};
-
-const isPlayerInRangeOfObject = (player: Player, obj: Item) => {
-  return (
-    obj.x !== undefined &&
-    obj.y !== undefined &&
-    obj.x >= player.playerRegion.startCoord.x &&
-    obj.x <= player.playerRegion.endCoord.x &&
-    obj.y >= player.playerRegion.startCoord.y &&
-    obj.y <= player.playerRegion.endCoord.y
-  );
 };
 
 export const command = (input: string, player: Player, room: Room) => {
   const lowerCasedInput = input.toLowerCase();
   let response = "I don't understand that.";
 
+  const nearExit = room.roomExits?.find((exit) =>
+    isPlayerInRangeOffRegion(player, exit)
+  );
+
   // Check if input contains "pick" or "take" and any item name from the room
   const mentionedItem = room.items.find((item) =>
     lowerCasedInput.includes(item.objectName.toLowerCase())
   );
 
-  if (lowerCasedInput.includes("open") && lowerCasedInput.includes("door")) {
-    const nearDoor = room.roomExits?.find((exit) => {
-      return isPlayerInRangeOffRegion(player, exit);
-    });
-
-    if (nearDoor) {
-      nearDoor.isOpen = true;
-      response = `You opened the ${nearDoor.objectName}!`;
-      console.log("nearDoor: ", nearDoor);
+  if (
+    lowerCasedInput.includes("open") &&
+    nearExit &&
+    lowerCasedInput.includes(nearExit?.objectName.toLowerCase())
+  ) {
+    if (nearExit) {
+      nearExit.isOpen = true;
+      if (nearExit.exitLinkId) {
+        syncAllRoomExits({ exitLinkId: nearExit.exitLinkId, isOpen: true });
+      }
+      response = `You opened the ${nearExit.objectName}!`;
     }
   }
 
-  if (lowerCasedInput.includes("close") && lowerCasedInput.includes("door")) {
-    const nearDoor = room.roomExits?.find((exit) => {
-      return isPlayerInRangeOffRegion(player, exit);
-    });
-
-    if (nearDoor) {
-      nearDoor.isOpen = false;
-      response = `You closed the ${nearDoor.objectName}!`;
-      console.log("nearDoor: ", nearDoor);
+  if (
+    lowerCasedInput.includes("close") &&
+    nearExit &&
+    lowerCasedInput.includes(nearExit?.objectName.toLowerCase())
+  ) {
+    if (nearExit) {
+      nearExit.isOpen = false;
+      if (nearExit.exitLinkId) {
+        syncAllRoomExits({ exitLinkId: nearExit.exitLinkId, isOpen: false });
+      }
+      response = `You closed the ${nearExit.objectName}!`;
     }
   }
 

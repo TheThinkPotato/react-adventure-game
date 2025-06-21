@@ -44,6 +44,7 @@ export type RoomExitRegion = Region & {
     isOpen: boolean;
     isLocked: boolean;  
     objectName: string;
+    exitLinkId?: string;
 }
 
 export type Coord = {
