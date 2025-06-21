@@ -50,7 +50,7 @@ export const initialRoom: Room = {
     },
   ],
   roomExits: [
-    { objectName: "door", startCoord: { x: 91, y: 41 }, endCoord: { x: 95, y: 50}, targetRoomIndex: 1, isOpen: true, isLocked: false, isBlocked: false },
+    { objectName: "door", startCoord: { x: 91, y: 41 }, endCoord: { x: 95, y: 50}, targetRoomIndex: 1, isOpen: false, isLocked: false, isBlocked: false },
   ],
 };
 

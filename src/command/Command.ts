@@ -38,13 +38,25 @@ export const command = (input: string, player: Player, room: Room) => {
 
   if (lowerCasedInput.includes("open") && lowerCasedInput.includes("door")) {
     const nearDoor = room.roomExits?.find((exit) => {
-      const valueRet = isPlayerInRangeOffRegion(player, exit);
-
-      return valueRet;
+      return isPlayerInRangeOffRegion(player, exit);
     });
 
     if (nearDoor) {
+      nearDoor.isOpen = true;
       response = `You opened the ${nearDoor.objectName}!`;
+      console.log("nearDoor: ", nearDoor);
+    }
+  }
+
+  if (lowerCasedInput.includes("close") && lowerCasedInput.includes("door")) {
+    const nearDoor = room.roomExits?.find((exit) => {
+      return isPlayerInRangeOffRegion(player, exit);
+    });
+
+    if (nearDoor) {
+      nearDoor.isOpen = false;
+      response = `You closed the ${nearDoor.objectName}!`;
+      console.log("nearDoor: ", nearDoor);
     }
   }
 
