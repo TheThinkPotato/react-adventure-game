@@ -1,4 +1,5 @@
 import type { Player, Room } from "../Types/types";
+import { checkNextMoveBlockRegions } from "./Movement/blockRegion";
 import { updatePlayerRegion } from "./playerRegion";
 
 interface KeyboardControlsProps {
@@ -13,85 +14,6 @@ interface KeyboardControlsProps {
   room: Room;
 }
 
-const checkNextMoveBlockRegions = (
-  player: Player,
-  room: Room,
-  direction: string
-) => {
-  if (direction === "up") {
-    return (
-      room.blockRegions.some(
-        (region) =>
-          region.endCoord.y === player.y - 1 &&
-          player.x >= region.startCoord.x &&
-          player.x <= region.endCoord.x
-      ) ||
-      room.roomObjects?.some((obj) =>
-        obj.blockRegions?.some(
-          (region) =>
-            region.endCoord.y === player.y - 1 &&
-            player.x >= region.startCoord.x &&
-            player.x <= region.endCoord.x
-        )
-      )
-    );
-  }
-  if (direction === "down") {
-    return (
-      room.blockRegions.some(
-        (region) =>
-          region.startCoord.y === player.y + 1 &&
-          player.x >= region.startCoord.x &&
-          player.x <= region.endCoord.x
-      ) ||
-      room.roomObjects?.some((obj) =>
-        obj.blockRegions?.some(
-          (region) =>
-            region.startCoord.y === player.y + 1 &&
-            player.x >= region.startCoord.x &&
-            player.x <= region.endCoord.x
-        )
-      )
-    );
-  }
-  if (direction === "left") {
-    return (
-      room.blockRegions.some(
-        (region) =>
-          region.endCoord.x === player.x - 1 &&
-          player.y >= region.startCoord.y &&
-          player.y <= region.endCoord.y
-      ) ||
-      room.roomObjects?.some((obj) =>
-        obj.blockRegions?.some(
-          (region) =>
-            region.endCoord.x === player.x - 1 &&
-            player.y >= region.startCoord.y &&
-            player.y <= region.endCoord.y
-        )
-      )
-    );
-  }
-  if (direction === "right") {
-    return (
-      room.blockRegions.some(
-        (region) =>
-          region.startCoord.x === player.x + 1 &&
-          player.y >= region.startCoord.y &&
-          player.y <= region.endCoord.y
-      ) ||
-      room.roomObjects?.some((obj) =>
-        obj.blockRegions?.some(
-          (region) =>
-            region.startCoord.x === player.x + 1 &&
-            player.y >= region.startCoord.y &&
-            player.y <= region.endCoord.y
-        )
-      )
-    );
-  }
-  return false;
-};
 
 export const keyboardControls = ({
   setPlayer,
@@ -103,12 +25,14 @@ export const keyboardControls = ({
   setMirrorPlayer,
   room,
 }: KeyboardControlsProps) => {
-  // console.log("KeyboardPress player: ", player);
   const handleKeyDown = (e: KeyboardEvent) => {
     setPlayer((prev: Player) => {
       let { x, y } = prev;
       const items = prev.items || [];
-      if (e.key === "ArrowUp" && !checkNextMoveBlockRegions(player, room, "up")) {
+      if (
+        e.key === "ArrowUp" &&
+        !checkNextMoveBlockRegions(player, room, "up")
+      ) {
         y = Math.max(0, y - 1);
       }
       if (

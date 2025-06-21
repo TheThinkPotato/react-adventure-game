@@ -15,9 +15,10 @@ export const initialRoom: Room = {
       image: "/assets/objects/keycardRed.png",
       displayedInDescription: true,
       displayedItemDescription: "A red keycard on the floor.",
+      isPickedUp: false,
     },
   ],
-  initialPlayerPosition: { x: 90, y: 35 },
+  initialPlayerPosition: { x: 90, y: 46 },
   description:
     "You are in a server room.\n\nOn the walls you can see a machine with a lot of numbers and lights.",
   playerScale: 16,
@@ -49,7 +50,7 @@ export const initialRoom: Room = {
     },
   ],
   roomExits: [
-    { startCoord: { x: 91, y: 41 }, endCoord: { x: 95, y: 50}, targetRoomIndex: 1 },
+    { objectName: "door", startCoord: { x: 91, y: 41 }, endCoord: { x: 95, y: 50}, targetRoomIndex: 1, isOpen: true, isLocked: false, isBlocked: false },
   ],
 };
 
@@ -57,7 +58,7 @@ export const nextRoom: Room = {
   backgroundImage: "/assets/rooms/initialRoom.jpg",
   exits: ["north", "south", "east", "west"],
   items: [],
-  initialPlayerPosition: { x: 9, y: 36 },
+  initialPlayerPosition: { x: 7, y: 36 },
   description:
     "You are in a vacant server room, there is nothing special here.",
   playerScale: 16,
@@ -68,6 +69,6 @@ export const nextRoom: Room = {
   ],
   roomObjects: [],
   roomExits: [
-    { startCoord: { x: 0, y: 31 }, endCoord: { x: 6, y: 42}, targetRoomIndex: 0 },
+    { objectName: "door", startCoord: { x: 0, y: 31 }, endCoord: { x: 6, y: 42}, targetRoomIndex: 0, isOpen: true, isLocked: false, isBlocked: false },
   ],
 };

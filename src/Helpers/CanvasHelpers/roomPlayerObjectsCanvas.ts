@@ -82,12 +82,6 @@ export const renderObjects = (
 
   drawList.sort((a, b) => a.y - b.y);
 
-  // console.log("Sort: ", drawList);
-
-  // drawList.forEach((item) => {
-  //   console.log("Element: ", item.objectName, item.y);
-  // });
-
   drawList.forEach((obj) => {
     if ("img" in obj) {
       renderPlayer(

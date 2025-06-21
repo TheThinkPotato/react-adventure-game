@@ -3,7 +3,7 @@ export type Player = {
     x: number;
     y: number;
     items: Item[];
-    playerRegion?: Region;
+    playerRegion: Region;
 }
 
 export type Room = {
@@ -38,6 +38,14 @@ export type Region = {
     endCoord: Coord;
 }
 
+export type RoomExitRegion = Region & {
+    targetRoomIndex: number;
+    isBlocked: boolean;
+    isOpen: boolean;
+    isLocked: boolean;  
+    objectName: string;
+}
+
 export type Coord = {
     x: number;
     y: number;
@@ -61,10 +69,4 @@ export type RoomObject = {
     isOpen?: boolean;
     isVisible?: boolean;
     blockRegions?: Region[];
-}
-
-export type RoomExitRegion = {
-    startCoord: Coord;
-    endCoord: Coord;
-    targetRoomIndex: number;
 }
