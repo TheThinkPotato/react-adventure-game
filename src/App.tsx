@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { command } from "./command/Command";
+import { command } from "./command/commandMain";
 import { keyboardControls } from "./Helpers/keyboard";
 import TextConsole from "./Components/TextConsole";
 import { drawCanvas } from "./Helpers/CanvasHelpers/canvas";
